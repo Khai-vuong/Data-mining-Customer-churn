@@ -8,96 +8,60 @@ from sklearn.model_selection import train_test_split
 
 
 BASE_DIR = Path(__file__).resolve().parent
-TRAIN_FILE = BASE_DIR / "customer_churn_dataset-training-master.csv"
-TEST_FILE = BASE_DIR / "customer_churn_dataset-testing-master.csv"
+TRAIN_FILE = BASE_DIR / "clean_data.csv"
+TEST_FILE = BASE_DIR / "clean_test_data.csv"
 TREE_IMAGE_PATH = BASE_DIR / "decision_tree_visualization.png"
 
 
-def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
-    """Preprocess data: drop CustomerID, normalize columns, one-hot encode."""
-    df = df.copy()
-    df.drop(columns='CustomerID', inplace=True)
-    df.columns = [col.lower().replace(' ', '_') for col in df.columns]
-    df.dropna(inplace=True)
-    
-    discrete_col = ['age', 'tenure', 'usage_frequency', 'support_calls', 
-                    'payment_delay', 'last_interaction', 'churn']
-    for col in discrete_col:
-        df[col] = df[col].astype(int)
-    
-    df_encoded = pd.get_dummies(
-        df, 
-        columns=['gender', 'subscription_type', 'contract_length'], 
-        drop_first=False, 
-        dtype=int
-    )
-    return df_encoded
-
-
-def load_and_preprocess_data() -> tuple:
-    """Load and preprocess training and testing data."""
+def load_clean_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Load cleaned training and testing data from CSV files."""
     if not TRAIN_FILE.exists():
         raise FileNotFoundError(f"Cannot find training file: {TRAIN_FILE}")
     if not TEST_FILE.exists():
         raise FileNotFoundError(f"Cannot find testing file: {TEST_FILE}")
-    
+
     df_train = pd.read_csv(TRAIN_FILE)
     df_test = pd.read_csv(TEST_FILE)
-    
-    df_train_processed = preprocess_data(df_train)
-    df_test_processed = preprocess_data(df_test)
-    
-    return df_train_processed, df_test_processed
+
+    return df_train, df_test
 
 
 def main() -> None:
-    df_train, df_test = load_and_preprocess_data()
+    df_train, df_test = load_clean_data()
 
     if "churn" not in df_train.columns or "churn" not in df_test.columns:
         raise ValueError("Target column 'churn' not found in data")
 
-    # X_train = df_train.drop(columns="churn")
-    # y_train = df_train["churn"]
-    
-    # X_test = df_test.drop(columns="churn")
-    # y_test = df_test["churn"]
-    
-    
-
-    # model = DecisionTreeClassifier(
-    #     random_state=42,
-    #     criterion="gini",
-    #     max_depth=5,
-    #     min_samples_split=20,
-    #     min_samples_leaf=10,
-    # )
-    # model.fit(X_train, y_train)
-
-    # y_pred = model.predict(X_test)
-    
     X = df_train.drop(columns="churn") 
     y = df_train["churn"]
+    
+    X_test_file = df_test.drop(columns="churn")
+    y_test_file = df_test["churn"]
+    X_test_file = X_test_file.reindex(columns=X.columns, fill_value=0)
 
     X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42, stratify=y, )
     
     model = DecisionTreeClassifier( 
         random_state=42, 
-        criterion="gini", 
+        criterion="entropy", 
         max_depth=5, 
         min_samples_split=20, 
         min_samples_leaf=10, 
     ) 
     model.fit(X_train, y_train) 
-    y_pred = model.predict(X_test)
+    # y_pred = model.predict(X_test)
+    
+    y_pred = model.predict(X_test_file)
 
     print("Decision Tree trained successfully")
     print(f"Train shape: {X_train.shape}")
     print(f"Test shape: {X_test.shape}")
-    print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
-    print("\nConfusion matrix:")
-    print(confusion_matrix(y_test, y_pred))
-    print("\nClassification report:")
-    print(classification_report(y_test, y_pred))
+    # print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
+    print(f"Test Accuracy: {accuracy_score(y_test_file, y_pred):.4f}")
+    # print("\nConfusion matrix:")
+    # print(confusion_matrix(y_test, y_pred))
+    # print("\nClassification report:")
+    # print(classification_report(y_test_file, y_pred))
     
     
     # Map feature names to importances

@@ -34,13 +34,7 @@ import xgboost as xgb
 
 #đọc dữ liệu từ hai file csv và gộp chúng lại thành một DataFrame duy nhất
 base_dir = Path(__file__).resolve().parent
-df = pd.concat(
-    [
-        pd.read_csv(base_dir / 'customer_churn_dataset-training-master.csv'),
-        pd.read_csv(base_dir / 'customer_churn_dataset-testing-master.csv')
-    ], 
-    axis=0)
-df.reset_index(drop=True, inplace=True)
+df = pd.read_csv(base_dir / 'customer_churn_dataset-training-master.csv')
 # print(df.describe())
 # print(df.info())
 # print(df.describe(include=[object]))

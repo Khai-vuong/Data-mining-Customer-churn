@@ -59,6 +59,18 @@ descrete_col = ['age', 'tenure', 'usage_frequency', 'support_calls', 'payment_de
 for col in descrete_col:
     df[col] = df[col].astype(int)
 # print(df.info())
+
+# One-hot encode categorical features
+print("Original shape:", df.shape)
+df_encoded = pd.get_dummies(df, columns=['gender', 'subscription_type', 'contract_length'], drop_first=False, dtype=int)
+print("After one-hot encoding shape:", df_encoded.shape)
+
+# Export clean data to CSV
+clean_data_path = base_dir / 'clean_data.csv'
+df_encoded.to_csv(clean_data_path, index=False)
+print(f"\nClean data exported to: {clean_data_path}")
+print(f"Columns: {list(df_encoded.columns)}")
+
 # tạo các hàm để trực quan hóa dữ liệu và hiển thị các thống kê cơ bản về phân phối của các đặc trưng trong DataFrame
 def make_histogram(df, target_feature, bins = 10, custom_ticks=None, unit='', additional=''):
     plt.figure(figsize=(10, 5))

@@ -7,8 +7,8 @@ from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 
 BASE_DIR = Path(__file__).resolve().parent
-TRAIN_FILE = BASE_DIR / "clean_data.csv"
-TEST_FILE = BASE_DIR / "clean_test_data.csv"
+TRAIN_FILE = BASE_DIR / "clean_train.csv"
+TEST_FILE = BASE_DIR / "clean_test.csv"
 TREE_IMAGE_PATH = BASE_DIR / "decision_tree_visualization.png"
 
 

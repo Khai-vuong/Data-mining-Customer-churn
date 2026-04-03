@@ -8,8 +8,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 BASE_DIR = Path(__file__).resolve().parent
-TRAIN_FILE = BASE_DIR / "clean_data.csv"
-TEST_FILE = BASE_DIR / "clean_test_data.csv"
+TRAIN_FILE = BASE_DIR / "clean_train.csv"
+TEST_FILE = BASE_DIR / "clean_test.csv"
 ENABLE_FEATURE_SELECTION = True
 FEATURE_SELECTION_MODE = "correlation"
 CORRELATION_THRESHOLD = 0.05

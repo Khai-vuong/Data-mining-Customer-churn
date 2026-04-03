@@ -2,7 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.model_selection import train_test_split
 
@@ -32,41 +32,52 @@ def main() -> None:
     if "churn" not in df_train.columns or "churn" not in df_test.columns:
         raise ValueError("Target column 'churn' not found in data")
 
-    X = df_train.drop(columns="churn") 
+    X = df_train.drop(columns="churn")
     y = df_train["churn"]
-    
+
     X_test_file = df_test.drop(columns="churn")
     y_test_file = df_test["churn"]
     X_test_file = X_test_file.reindex(columns=X.columns, fill_value=0)
 
-    X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.2, random_state=42, stratify=y, )
-    
-    model = DecisionTreeClassifier( 
-        random_state=42, 
-        criterion="entropy", 
-        max_depth=5, 
-        min_samples_split=20, 
-        min_samples_leaf=10, 
-    ) 
-    model.fit(X_train, y_train) 
-    # y_pred = model.predict(X_test)
-    
-    y_pred = model.predict(X_test_file)
+    X_train, X_valid, y_train, y_valid = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
+
+    model_params = {
+        "random_state": 42,
+        "criterion": "entropy",
+        "max_depth": 5,
+        "min_samples_split": 20,
+        "min_samples_leaf": 10,
+    }
+
+    model_pp1 = DecisionTreeClassifier(**model_params)
+    model_pp1.fit(X_train, y_train)
+    y_pred_pp1 = model_pp1.predict(X_valid)
+
+    model_pp2 = DecisionTreeClassifier(**model_params)
+    model_pp2.fit(X_train, y_train)
+    y_pred_pp2 = model_pp2.predict(X_test_file)
+
+    model_pp3 = DecisionTreeClassifier(**model_params)
+    model_pp3.fit(X, y)
+    y_pred_pp3 = model_pp3.predict(X_test_file)
 
     print("Decision Tree trained successfully")
     print(f"Train shape: {X_train.shape}")
-    print(f"Test shape: {X_test.shape}")
-    # print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
-    print(f"Test Accuracy: {accuracy_score(y_test_file, y_pred):.4f}")
-    # print("\nConfusion matrix:")
-    # print(confusion_matrix(y_test, y_pred))
-    # print("\nClassification report:")
-    # print(classification_report(y_test_file, y_pred))
-    
-    
+    print(f"Validation shape (PP1): {X_valid.shape}")
+    print(f"External test shape (PP2, PP3): {X_test_file.shape}")
+    print(f"PP1 Accuracy (80% train -> 20% clean_data): {accuracy_score(y_valid, y_pred_pp1):.4f}")
+    print(f"PP2 Accuracy (80% train -> clean_test_data): {accuracy_score(y_test_file, y_pred_pp2):.4f}")
+    print(f"PP3 Accuracy (100% clean_data -> clean_test_data): {accuracy_score(y_test_file, y_pred_pp3):.4f}")
+
     # Map feature names to importances
     feature_importances = pd.Series(
-        model.feature_importances_,
+        model_pp3.feature_importances_,
             index=X_train.columns
         ).round(3).sort_values(ascending=False)
     
@@ -77,7 +88,7 @@ def main() -> None:
     
     plt.figure(figsize=(50, 30))
     plot_tree(
-        model,
+        model_pp3,
         feature_names=X_train.columns,
         class_names=["Not Churn", "Churn"],
         filled=True,
@@ -89,7 +100,7 @@ def main() -> None:
     plt.tight_layout()
     plt.savefig(TREE_IMAGE_PATH, dpi=300, bbox_inches="tight")
     print(f"\nDecision tree visualization saved to: {TREE_IMAGE_PATH}")
-    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":

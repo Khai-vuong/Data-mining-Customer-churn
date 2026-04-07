@@ -1,4 +1,5 @@
 from pathlib import Path
+import textwrap
 
 import matplotlib
 
@@ -6,7 +7,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, recall_score
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 
@@ -44,6 +45,51 @@ def split_features_target(
     return x_train, y_train, x_test, y_test
 
 
+def build_tree_figure_size(model: DecisionTreeClassifier) -> tuple[float, float, int]:
+    depth = model.get_depth()
+    leaf_count = model.get_n_leaves()
+
+    width = max(28.0, leaf_count * 1.8)
+    height = max(12.0, (depth + 1) * 2.6)
+    fontsize = max(7, min(12, int(220 / max(leaf_count, 1))))
+    
+    width = 22
+    height = 8
+    fontsize = 10
+    return width, height, fontsize
+
+
+def simplify_tree_labels(plot_annotations: list) -> None:
+    for annotation in plot_annotations:
+        raw_text = annotation.get_text().strip()
+        if not raw_text:
+            continue
+
+        lines = [line.strip() for line in raw_text.split("\n") if line.strip()]
+        condition_line = next((line for line in lines if "<=" in line or ">" in line), "")
+        class_line = next((line for line in lines if line.startswith("class = ")), "")
+
+        if condition_line:
+            label_text = condition_line
+        elif class_line:
+            label_text = class_line.replace("class = ", "")
+        else:
+            label_text = ""
+
+        if len(label_text) >= 8:
+            label_text = "\n".join(
+                textwrap.wrap(
+                    label_text,
+                    width=8,
+                    break_long_words=True,
+                    break_on_hyphens=False,
+                )
+            )
+
+        annotation.set_text(label_text)
+        annotation.set_linespacing(1.4)
+
+
 def main() -> None:
     train_df, test_df = load_clean_data()
     x_train, y_train, x_test, y_test = split_features_target(train_df, test_df)
@@ -60,6 +106,7 @@ def main() -> None:
     y_pred = model.predict(x_test)
 
     accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
@@ -68,6 +115,7 @@ def main() -> None:
     print(f"Training shape: {x_train.shape}")
     print(f"Testing shape: {x_test.shape}")
     print(f"Accuracy: {accuracy:.4f}")
+    print(f"Precision: {precision:.4f}")
     print(f"Recall: {recall:.4f}")
     print(f"F1 Score: {f1:.4f}")
     print("Confusion Matrix:")
@@ -80,17 +128,22 @@ def main() -> None:
     print("\nTop 10 Feature Importances:")
     print(feature_importance.head(10).round(4))
 
-    plt.figure(figsize=(28, 16))
-    plot_tree(
+    figure_width, figure_height, font_size = build_tree_figure_size(model)
+
+    plt.figure(figsize=(figure_width, figure_height))
+    plot_annotations = plot_tree(
         model,
         feature_names=x_train.columns,
         class_names=["No Churn", "Churn"],
         filled=True,
         rounded=True,
-        fontsize=8,
+        impurity=False,
+        proportion=False,
+        fontsize=font_size,
     )
+    simplify_tree_labels(plot_annotations)
     plt.title("Decision Tree for Customer Churn")
-    plt.tight_layout()
+    plt.tight_layout(pad=2.0)
     plt.savefig(TREE_IMAGE_PATH, dpi=300, bbox_inches="tight")
     plt.close()
 

@@ -8,7 +8,7 @@ import sys
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score, recall_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import Pipeline
@@ -186,6 +186,7 @@ def evaluate_model(
     return {
         "model_name": model_spec.name,
         "accuracy": round(float(accuracy_score(y_test, y_pred)), 4),
+        "precision": round(float(precision_score(y_test, y_pred)), 4),
         "recall": round(float(recall_score(y_test, y_pred)), 4),
         "f1": round(float(f1_score(y_test, y_pred)), 4),
         "top1": top_features[0],
@@ -209,6 +210,7 @@ def main() -> None:
         print(
             f"{result['model_name']}: "
             f"accuracy={result['accuracy']:.4f}, "
+            f"precision={result['precision']:.4f}, "
             f"recall={result['recall']:.4f}, "
             f"f1={result['f1']:.4f}"
         )

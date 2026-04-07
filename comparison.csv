@@ -1,8 +1,8 @@
-﻿model_name,accuracy,recall,f1,top1,top2,top3,top4,top5
-Decision Tree,0.8542,0.6797,0.7596,tech_support,contract,monthly_charges,support_calls,tenure
-Random Forest,0.8565,0.6856,0.764,monthly_charges,support_calls,contract,tech_support,total_charges
-Logistic Regression,0.781,0.541,0.626,,,,,
-KNN,0.801,0.5771,0.6627,,,,,
-Gaussian Naive Bayes,0.7788,0.5572,0.6305,,,,,
-XGBoost,0.8528,0.6812,0.7581,tech_support,contract,support_calls,monthly_charges,tenure
-LightGBM,0.8558,0.6834,0.7625,total_charges,monthly_charges,tenure,support_calls,contract
+﻿model_name,accuracy,precision,recall,f1,top1,top2,top3,top4,top5
+Decision Tree,0.8542,0.8607,0.6797,0.7596,tech_support,contract,monthly_charges,support_calls,tenure
+Random Forest,0.8565,0.8626,0.6856,0.764,monthly_charges,support_calls,contract,tech_support,total_charges
+Logistic Regression,0.781,0.7427,0.541,0.626,,,,,
+KNN,0.801,0.7781,0.5771,0.6627,,,,,
+Gaussian Naive Bayes,0.7788,0.726,0.5572,0.6305,,,,,
+XGBoost,0.8528,0.8546,0.6812,0.7581,tech_support,contract,support_calls,monthly_charges,tenure
+LightGBM,0.8558,0.8622,0.6834,0.7625,total_charges,monthly_charges,tenure,support_calls,contract

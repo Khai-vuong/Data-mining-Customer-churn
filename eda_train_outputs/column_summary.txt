@@ -1,0 +1,100 @@
+EDA REPORT FOR TRAIN.CSV
+Rows: 16000
+Columns: 11
+
+Column: customer_id
+- Dtype: int64
+- Type: numeric
+- Missing: 0 (0.0%)
+- Unique values: 16000
+- Mean: 10007.5069
+- Median: 10021.5
+- Std: 5790.7869
+- Min: 2.0
+- Max: 20000.0
+
+Column: tenure
+- Dtype: int64
+- Type: numeric
+- Missing: 0 (0.0%)
+- Unique values: 72
+- Mean: 36.4073
+- Median: 36.0
+- Std: 20.7669
+- Min: 1.0
+- Max: 72.0
+
+Column: monthly_charges
+- Dtype: float64
+- Type: numeric
+- Missing: 0 (0.0%)
+- Unique values: 8004
+- Mean: 69.9698
+- Median: 70.05
+- Std: 28.9293
+- Min: 20.0
+- Max: 119.99
+
+Column: total_charges
+- Dtype: float64
+- Type: numeric
+- Missing: 0 (0.0%)
+- Unique values: 15300
+- Mean: 2540.7219
+- Median: 2101.84
+- Std: 1879.9238
+- Min: 20.23
+- Max: 8629.92
+
+Column: contract
+- Dtype: str
+- Type: categorical
+- Missing: 0 (0.0%)
+- Unique values: 3
+- Top values: Month-to-month: 9562; One year: 3980; Two year: 2458
+
+Column: payment_method
+- Dtype: str
+- Type: categorical
+- Missing: 0 (0.0%)
+- Unique values: 4
+- Top values: Credit: 4025; Cash: 4018; Debit: 4011; UPI: 3946
+
+Column: internet_service
+- Dtype: str
+- Type: categorical
+- Missing: 1627 (10.17%)
+- Unique values: 2
+- Top values: Fiber: 8041; DSL: 6332; Missing: 1627
+
+Column: tech_support
+- Dtype: str
+- Type: categorical
+- Missing: 0 (0.0%)
+- Unique values: 2
+- Top values: No: 10456; Yes: 5544
+
+Column: online_security
+- Dtype: str
+- Type: categorical
+- Missing: 0 (0.0%)
+- Unique values: 2
+- Top values: No: 9580; Yes: 6420
+
+Column: support_calls
+- Dtype: int64
+- Type: numeric
+- Missing: 0 (0.0%)
+- Unique values: 9
+- Mean: 1.5168
+- Median: 1.0
+- Std: 1.2275
+- Min: 0.0
+- Max: 8.0
+
+Column: churn
+- Dtype: str
+- Type: categorical
+- Missing: 0 (0.0%)
+- Unique values: 2
+- Top values: No: 10512; Yes: 5488

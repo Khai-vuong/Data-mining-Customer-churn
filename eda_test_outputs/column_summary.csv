@@ -1,0 +1,12 @@
+﻿column,dtype,missing_count,missing_percent,unique_count,column_type,mean,median,std,min,max,top_values
+customer_id,int64,0,0.0,4000,numeric,9972.4725,9892.0,5705.204,1.0,19999.0,
+tenure,int64,0,0.0,72,numeric,36.708,37.0,20.8031,1.0,72.0,
+monthly_charges,float64,0,0.0,3295,numeric,70.1735,70.24,28.7365,20.02,120.0,
+total_charges,float64,0,0.0,3957,numeric,2557.0085,2075.74,1895.1855,22.01,8518.58,
+contract,str,0,0.0,3,categorical,,,,,,Month-to-month: 2380; One year: 1010; Two year: 610
+payment_method,str,0,0.0,4,categorical,,,,,,Debit: 1014; UPI: 1008; Credit: 1001; Cash: 977
+internet_service,str,386,9.65,2,categorical,,,,,,Fiber: 2023; DSL: 1591; Missing: 386
+tech_support,str,0,0.0,2,categorical,,,,,,No: 2575; Yes: 1425
+online_security,str,0,0.0,2,categorical,,,,,,No: 2428; Yes: 1572
+support_calls,int64,0,0.0,8,numeric,1.4957,1.0,1.2659,0.0,7.0,
+churn,str,0,0.0,2,categorical,,,,,,No: 2645; Yes: 1355
